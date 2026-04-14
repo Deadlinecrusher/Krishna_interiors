@@ -19,7 +19,7 @@ const pricing = [
     price: '₹800 – ₹1,200',
     unit: 'per sq ft',
     desc: 'Clean, modern interiors for those who want quality within a defined budget.',
-    features: ['2D Floor Planning', 'Material Selection', 'Basic 3D Views', 'Site Supervision', '1 Year Warranty'],
+    features: ['2D Floor Planning', 'Material Selection', 'Basic 3D Views', 'Site Supervision'],
     highlight: false,
   },
   {
@@ -27,7 +27,7 @@ const pricing = [
     price: '₹1,200 – ₹1,800',
     unit: 'per sq ft',
     desc: 'Elevated design with premium materials, detailed execution and full project management.',
-    features: ['Full 3D Visualization', 'Premium Materials', 'Complete PM', 'Modular Furniture', '2 Year Warranty', 'Dedicated Designer'],
+    features: ['Full 3D Visualization', 'Premium Materials', 'Complete PM', 'Modular Furniture', 'Dedicated Designer'],
     highlight: true,
   },
   {
@@ -35,7 +35,7 @@ const pricing = [
     price: '₹1,800+',
     unit: 'per sq ft',
     desc: 'Bespoke luxury interiors crafted to your exact specifications with no compromises.',
-    features: ['Bespoke Design', 'Imported Materials', 'Full Turnkey', 'Custom Furniture', '3 Year Warranty', 'VIP Service'],
+    features: ['Bespoke Design', 'Imported Materials', 'Full Turnkey', 'Custom Furniture', 'VIP Service'],
     highlight: false,
   },
 ];
