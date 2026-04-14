@@ -152,7 +152,7 @@ export default function ContactPage() {
                   <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>Budget Range</label>
                   <select name="budget" value={form.budget} onChange={handleChange} className="form-input cursor-pointer" style={{ background: 'var(--bg-primary)' }}>
                     <option value="">Select...</option>
-                    {['Under ₹5L', '₹5L – ₹10L', '₹10L – ₹20L', '₹20L – ₹50L', '₹50L+'].map((b) => (
+                    {['Under ₹1L','₹1L – ₹3L','₹3L – ₹5L', '₹5L – ₹10L', '₹10L – ₹20L', '₹20L – ₹50L', '₹50L+'].map((b) => (
                       <option key={b} value={b} style={{ background: 'var(--bg-primary)' }}>{b}</option>
                     ))}
                   </select>
