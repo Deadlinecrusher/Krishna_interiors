@@ -15,59 +15,38 @@ const links = [
 
 function KrishnaLogo({ theme }: { theme: string }) {
   const isDark = theme === 'dark';
+
   return (
     <div
-      className="nav-logo-circle flex-shrink-0 transition-all duration-300 group-hover:scale-105"
+      className="
+        relative w-16 h-16 flex-shrink-0
+        rounded-full
+        flex items-center justify-center
+        transition-all duration-300
+        group-hover:scale-110 group-hover:shadow-lg
+      "
       style={{
-        width: '76px', height: '76px', borderRadius: '50%',
         background: isDark
-          ? 'radial-gradient(circle, #2a2318 50%, #1a1510 100%)'
-          : 'radial-gradient(circle, #ffffff 50%, #f5efe4 100%)',
+          ? '#ffffff' // solid white in dark mode
+          : 'rgba(201,169,110,0.15)', // soft gold in light mode
+        border: isDark
+          ? '1.5px solid rgba(255,255,255,0.4)'
+          : '1.5px solid rgba(201,169,110,0.4)',
         boxShadow: isDark
-          ? '0 0 0 1.5px rgba(201,169,110,0.5), 0 4px 20px rgba(0,0,0,0.55)'
-          : '0 0 0 1.5px rgba(201,169,110,0.55), 0 4px 20px rgba(201,169,110,0.2)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
+          ? '0 4px 20px rgba(0,0,0,0.6)'
+          : '0 4px 20px rgba(201,169,110,0.25)',
       }}
     >
-      <svg viewBox="0 0 100 100" width="60" height="60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="13" y1="72" x2="13" y2="48" stroke="#C9A96E" strokeWidth="2" opacity="0.9"/>
-        <line x1="17" y1="72" x2="17" y2="40" stroke="#C9A96E" strokeWidth="2" opacity="0.9"/>
-        <line x1="21" y1="72" x2="21" y2="33" stroke="#C9A96E" strokeWidth="2.2" opacity="0.9"/>
-        <line x1="25" y1="72" x2="25" y2="39" stroke="#C9A96E" strokeWidth="2" opacity="0.85"/>
-        <line x1="29" y1="72" x2="29" y2="46" stroke="#C9A96E" strokeWidth="1.8" opacity="0.8"/>
-        <line x1="13" y1="48" x2="29" y2="48" stroke="#C9A96E" strokeWidth="1" opacity="0.4"/>
-        <line x1="17" y1="40" x2="29" y2="40" stroke="#C9A96E" strokeWidth="1" opacity="0.4"/>
-        <polygon points="50,16 82,40 82,82 18,82 18,40"
-          fill={isDark ? 'rgba(26,21,16,0.5)' : 'rgba(245,239,228,0.6)'}
-          stroke="#1A2744" strokeWidth="2.2" strokeLinejoin="round"/>
-        <polyline points="18,40 50,16 82,40" fill="none" stroke="#C9A96E" strokeWidth="1" opacity="0.6"/>
-        <rect x="42" y="32" width="16" height="13" rx="1" fill="none" stroke="#4A6A8A" strokeWidth="1.4"/>
-        <line x1="50" y1="32" x2="50" y2="45" stroke="#4A6A8A" strokeWidth="0.9"/>
-        <line x1="42" y1="38" x2="58" y2="38" stroke="#4A6A8A" strokeWidth="0.9"/>
-        <rect x="43" y="57" width="14" height="25" rx="1" fill="none" stroke="#1A2744" strokeWidth="1.8"/>
-        <circle cx="54" cy="70" r="1.2" fill="#C9A96E"/>
-        <path d="M46 55 Q44 42 43 28" stroke="#2E7D4F" strokeWidth="1.4" fill="none" strokeLinecap="round"/>
-        <path d="M43 28 Q39 24 37 20" stroke="#2E7D4F" strokeWidth="0.9" fill="none" opacity="0.8"/>
-        <path d="M43 28 Q47 23 48 19" stroke="#2E7D4F" strokeWidth="0.9" fill="none" opacity="0.8"/>
-        <path d="M43.5 32 Q40 29 38 26" stroke="#4CAF50" strokeWidth="0.8" fill="none" opacity="0.7"/>
-        <path d="M43.5 32 Q46 28 47 25" stroke="#4CAF50" strokeWidth="0.8" fill="none" opacity="0.7"/>
-        <path d="M44 36 Q41 33 40 31" stroke="#66BB6A" strokeWidth="0.7" fill="none" opacity="0.6"/>
-        <path d="M44 36 Q46 33 47 31" stroke="#66BB6A" strokeWidth="0.7" fill="none" opacity="0.6"/>
-        <ellipse cx="43" cy="27" rx="3.5" ry="2.5" fill="#1565C0" opacity="0.85"/>
-        <ellipse cx="43" cy="27" rx="2" ry="1.4" fill="#0D47A1"/>
-        <ellipse cx="43" cy="27" rx="1" ry="0.7" fill="#1A237E"/>
-        <ellipse cx="42.5" cy="26.5" rx="0.5" ry="0.4" fill="rgba(255,255,255,0.5)"/>
-        <line x1="28" y1="50" x2="74" y2="47" stroke="#C9A96E" strokeWidth="2" strokeLinecap="round"/>
-        <circle cx="38" cy="49.2" r="1.1" fill={isDark ? '#1a1510' : '#f5efe4'}/>
-        <circle cx="44" cy="48.8" r="1.1" fill={isDark ? '#1a1510' : '#f5efe4'}/>
-        <circle cx="50" cy="48.4" r="1.1" fill={isDark ? '#1a1510' : '#f5efe4'}/>
-        <circle cx="56" cy="48" r="1.1" fill={isDark ? '#1a1510' : '#f5efe4'}/>
-        <circle cx="62" cy="47.6" r="1.1" fill={isDark ? '#1a1510' : '#f5efe4'}/>
-        <ellipse cx="74" cy="47" rx="2" ry="1.5" fill="#C9A96E" opacity="0.9"/>
-        <ellipse cx="28" cy="50" rx="1.5" ry="1.2" fill="#A07840" opacity="0.8"/>
-        <text x="50" y="93" fontFamily="Georgia, serif" fontSize="10" fontStyle="italic"
-          fill="#1A2744" textAnchor="middle" fontWeight="500" letterSpacing="0.5">Krishna</text>
-      </svg>
+      <img
+        src="/logo.png"
+        alt="Krishna Interiors"
+        
+        className="
+          w-14 h-14 object-contain
+          transition-transform duration-300
+          group-hover:scale-110
+        "
+      />
     </div>
   );
 }
