@@ -131,16 +131,21 @@ export default function Footer() {
           </a>
         </p>
         <div className="flex gap-6">
-          {['Privacy Policy', 'Terms of Use'].map((t) => (
+          {['Privacy Policy', 'Terms of Use'].map((t) => {
+           const href = t === 'Privacy Policy' ? '/privacy-policy' : '/terms-of-use';
+           return(
             <Link
               key={t}
-              href="#"
-              className="text-xs transition-colors hover:text-amber-600"
+              href={href}
+              className="text-xs transition-colors hover:text-white"
               style={{ color: 'var(--text-muted)' }}
             >
-              {t}
+              {t}       
             </Link>
-          ))}
+
+            
+            );
+          })}
         </div>
       </div>
     </footer>
