@@ -12,8 +12,24 @@ export default function Footer() {
         {/* BRAND */}
         <div className="col-span-2 md:col-span-1">
           <div className="flex items-center gap-3 mb-5">
-            <div className="relative w-14 h-14 flex-shrink-0">
-              <Image src="/logo.png" alt="Krishna Interiors" fill className="object-contain" />
+            <div className=" 
+              relative w-16 h-16 flex-shrink-0
+              p-2
+              rounded-full
+              bg-yellow-400/20 
+              dark:bg-white
+              border border-yellow-500/30 dark:border-white/40
+              shadow-sm
+              flex items-center justify-center
+              transition-all duration-300 ease-in-out
+              hover:scale-110 hover:shadow-lg hover:shadow-yellow-500/30
+                ">
+             <Image src="/logo.png" alt="Krishna Interiors" fill 
+             className="
+                 object-contain 
+                scale-125
+                transition-transform duration-300
+                 hover:scale-140 " />
             </div>
           </div>
           <p className="font-serif text-2xl font-light mb-2" style={{ color: 'var(--gold)' }}>
@@ -137,7 +153,7 @@ export default function Footer() {
             <Link
               key={t}
               href={href}
-              className="text-xs transition-colors hover:text-white"
+              className="text-xs transition-colors hover:text-amber-600"
               style={{ color: 'var(--text-muted)' }}
             >
               {t}       
