@@ -3,7 +3,7 @@ import '../styles/globals.css';
 import { ThemeProvider } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import DynamicFavicon from '../components/DynamicFavicon';
+import IntroLoader from '../components/Intro';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -32,21 +32,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://krishnainteriors.in'),
   alternates: { canonical: 'https://krishnainteriors.in/' },
   manifest: '/manifest.json',
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  authors: [{ name: 'Krishna Construction Company', url: 'https://krishnainteriors.in' }],
-  category: 'Interior Design',
-  verification: {
-    google: 'TE2radM3YXp0cfYMm0UggulN-KRsNmd6cxJCwKGORyE',
-  },
+
   openGraph: {
     title: 'Krishna Interiors | Luxury Interior Design',
     description: 'Designed for Comfort, Built for Life. Premium interiors across Delhi NCR.',
@@ -63,26 +49,40 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     type: 'website',
   },
+
   twitter: {
     card: 'summary_large_image',
     title: 'Krishna Interiors | Luxury Interior Design Delhi NCR',
     description: 'Premium interior design, modular kitchens & turnkey solutions across Delhi NCR.',
     images: ['/og-image.jpg'],
   },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <DynamicFavicon />
+        {/* Fonts */}
         <link
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap"
           rel="stylesheet"
         />
+
+        {/* PWA + Meta */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+        {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -91,11 +91,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               '@type': 'InteriorDesigner',
               name: 'Krishna Construction Company',
               alternateName: 'Krishna Interiors',
-              image: 'https://krishnainteriors.in/og-image.jpg',
-              '@id': 'https://krishnainteriors.in',
               url: 'https://krishnainteriors.in',
               telephone: '+918796956034',
-              description: 'Premium interior design, renovation, modular kitchens and turnkey solutions across Delhi NCR.',
               address: {
                 '@type': 'PostalAddress',
                 streetAddress: 'Plot 836, Shalimar Garden Ext-1',
@@ -104,21 +101,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 postalCode: '201005',
                 addressCountry: 'IN',
               },
-              geo: { '@type': 'GeoCoordinates', latitude: 28.6515, longitude: 77.4089 },
               areaServed: ['Ghaziabad', 'Delhi', 'Noida', 'Gurugram', 'NCR'],
               priceRange: '₹₹₹',
-              openingHoursSpecification: {
-                '@type': 'OpeningHoursSpecification',
-                dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                opens: '09:00',
-                closes: '19:00',
-              },
               sameAs: ['https://www.instagram.com/_krishna_interiors_'],
             }),
           }}
         />
       </head>
+
       <body>
+        {/* 🔥 Intro Loader */}
+        <IntroLoader />
+
         <ThemeProvider>
           <Navbar />
           <main>{children}</main>

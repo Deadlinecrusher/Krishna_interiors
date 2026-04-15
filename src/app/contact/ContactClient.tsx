@@ -89,18 +89,24 @@ export default function ContactPage() {
           })}
 
           {/* MAP */}
-          <div className="reveal mt-6 md:mt-8 overflow-hidden" style={{ border: '1px solid var(--border-color)' }}>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.6!2d77.408!3d28.651!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sShalimar+Garden+Ext+1+Ghaziabad!5e0!3m2!1sen!2sin!4v1"
-              width="100%"
-              height="200"
-              style={{ border: 0, display: 'block' }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Krishna Interiors Location"
-            />
+          <div className="reveal mt-6 md:mt-8 w-full h-[260px] rounded-xl overflow-hidden shadow-md border border-[var(--border-color)]">
+          <iframe
+            src="https://www.google.com/maps?q=28.6885715,77.3404356&z=16&output=embed"
+            className="w-full h-full border-0"
+            loading="lazy"
+            title="Krishna Interiors Location"
+          />
           </div>
+          {/* 🔥 OPEN IN GOOGLE MAPS BUTTON */}
+          <a
+              href="https://www.google.com/maps/place/?q=place_id:ChIJrciT7fL7DDkRR7OJLNBkHh0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-3 text-xs tracking-wide transition-all duration-300 hover:translate-x-1 hover:underline"
+              style={{ color: 'var(--gold)' }}
+          >
+              📍 Open in Google Maps →
+          </a>
         </div>
 
         {/* FORM SIDE */}
