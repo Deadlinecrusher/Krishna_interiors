@@ -20,7 +20,7 @@ export default function IntroLoader() {
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
       <div className="logo-intro">
         <Image
-          src="/kcc.jpeg"
+          src="/KCC.jpeg"
           alt="Krishna Interiors"
           width={90}
           height={90}
