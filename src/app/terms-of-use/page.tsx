@@ -96,22 +96,10 @@ export default function TermsOfUse() {
             <p>Certain services may involve third-party vendors. While we ensure quality standards, Krishna Construction Co. shall not be liable for delays or issues arising from third-party services.</p>
           </div>
 
-          <div>
-            <h3 className="text-xl font-semibold mb-2">10. Warranty & Quality Assurance</h3>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>A 12-month warranty on workmanship is provided from the date of handover</li>
-              <li>Warranty excludes:
-                <ul className="list-circle pl-6 mt-1">
-                  <li>Normal wear and tear</li>
-                  <li>Damage due to misuse, negligence, or external factors</li>
-                  <li>Alterations by third parties</li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+          
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">11. Cancellation & Termination</h3>
+            <h3 className="text-xl font-semibold mb-2">10. Cancellation & Termination</h3>
             <ul className="list-disc pl-6 space-y-1">
               <li>Advance payments are non-refundable</li>
               <li>In case of project cancellation:
@@ -125,12 +113,12 @@ export default function TermsOfUse() {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">12. Intellectual Property</h3>
+            <h3 className="text-xl font-semibold mb-2">11. Intellectual Property</h3>
             <p>All designs, drawings, concepts, and creatives remain the intellectual property of Krishna Construction Co. and may not be reused or reproduced without prior written consent.</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">13. Limitation of Liability</h3>
+            <h3 className="text-xl font-semibold mb-2">12. Limitation of Liability</h3>
             <p className="mb-2">Krishna Construction Co. shall not be liable for:</p>
             <ul className="list-disc pl-6 space-y-1">
               <li>Prior structural defects of the property</li>
@@ -140,22 +128,22 @@ export default function TermsOfUse() {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">14. Force Majeure</h3>
+            <h3 className="text-xl font-semibold mb-2">13. Force Majeure</h3>
             <p>The Company shall not be held responsible for delays or failure in performance due to events beyond its control, including but not limited to natural disasters, labor strikes, government restrictions, or supply chain disruptions.</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">15. Portfolio & Marketing Rights</h3>
+            <h3 className="text-xl font-semibold mb-2">14. Portfolio & Marketing Rights</h3>
             <p>Krishna Construction Co. reserves the right to use images, videos, and details of completed projects for marketing, promotional, and portfolio purposes.</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">16. Governing Law & Jurisdiction</h3>
+            <h3 className="text-xl font-semibold mb-2">15. Governing Law & Jurisdiction</h3>
             <p>These Terms & Conditions shall be governed by the laws of India. Any disputes shall be subject to the jurisdiction of courts in Delhi/NCR.</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">17. Digital Acceptance</h3>
+            <h3 className="text-xl font-semibold mb-2">16. Digital Acceptance</h3>
             <p>By using our website, submitting inquiries, or making any payment, you confirm that you have read, understood, and agreed to these Terms & Conditions.</p>
           </div>
         </div>
