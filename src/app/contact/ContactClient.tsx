@@ -10,24 +10,123 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  // Validation functions
+  const validateName = (name: string): string => {
+    if (!name.trim()) return 'Name is required';
+    if (!/^[a-zA-Z\s]+$/.test(name)) return 'Name should contain only letters';
+    if (name.trim().length < 2) return 'Name should be at least 2 characters';
+    return '';
+  };
+
+  const validatePhone = (phone: string): string => {
+    if (!phone) return 'Phone number is required';
+    if (!/^\d{10}$/.test(phone)) return 'Phone number must be exactly 10 digits';
+    if (!/^[6-9]/.test(phone)) return 'Phone number should start with 6, 7, 8, or 9';
+    return '';
+  };
+
+  const validateEmail = (email: string): string => {
+    if (!email) return ''; // Email is optional
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return 'Please enter a valid email address';
+    return '';
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    // Special handling for phone - only allow digits and limit to 10
+    if (name === 'phone') {
+      const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
+      setForm({ ...form, phone: digitsOnly });
+      
+      // Clear validation error when user types
+      if (validationErrors.phone) {
+        setValidationErrors({ ...validationErrors, phone: '' });
+      }
+      return;
+    }
+
+    // Special handling for name - only allow letters and spaces
+    if (name === 'name') {
+      const lettersOnly = value.replace(/[^a-zA-Z\s]/g, '');
+      setForm({ ...form, name: lettersOnly });
+      
+      if (validationErrors.name) {
+        setValidationErrors({ ...validationErrors, name: '' });
+      }
+      return;
+    }
+
+    setForm({ ...form, [name]: value });
     setError('');
+    
+    // Clear validation error for the field being edited
+    if (validationErrors[name]) {
+      setValidationErrors({ ...validationErrors, [name]: '' });
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    let errorMsg = '';
+
+    switch (name) {
+      case 'name':
+        errorMsg = validateName(value);
+        break;
+      case 'phone':
+        errorMsg = validatePhone(value);
+        break;
+      case 'email':
+        errorMsg = validateEmail(value);
+        break;
+    }
+
+    if (errorMsg) {
+      setValidationErrors({ ...validationErrors, [name]: errorMsg });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    // Validate all fields
+    const errors: Record<string, string> = {};
+    errors.name = validateName(form.name);
+    errors.phone = validatePhone(form.phone);
+    errors.email = validateEmail(form.email);
+
+    // Filter out empty errors
+    const validErrors = Object.fromEntries(
+      Object.entries(errors).filter(([_, v]) => v !== '')
+    );
+
+    if (Object.keys(validErrors).length > 0) {
+      setValidationErrors(validErrors);
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch('/api/enquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          phone: `+91${form.phone}` // Add country code when submitting
+        }),
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.error || 'Something went wrong. Please try again.'); setLoading(false); return; }
+      if (!res.ok) { 
+        setError(data.error || 'Something went wrong. Please try again.'); 
+        setLoading(false); 
+        return; 
+      }
       setSubmitted(true);
     } catch {
       setError('Network error. Please check your connection and try again.');
@@ -90,22 +189,22 @@ export default function ContactPage() {
 
           {/* MAP */}
           <div className="reveal mt-6 md:mt-8 w-full h-[260px] rounded-xl overflow-hidden shadow-md border border-[var(--border-color)]">
-          <iframe
-            src="https://www.google.com/maps?q=28.6885715,77.3404356&z=16&output=embed"
-            className="w-full h-full border-0"
-            loading="lazy"
-            title="Krishna Interiors Location"
-          />
+            <iframe
+              src="https://www.google.com/maps?q=28.6885715,77.3404356&z=16&output=embed"
+              className="w-full h-full border-0"
+              loading="lazy"
+              title="Krishna Interiors Location"
+            />
           </div>
-          {/* 🔥 OPEN IN GOOGLE MAPS BUTTON */}
+          {/* OPEN IN GOOGLE MAPS BUTTON - Fixed for mobile compatibility */}
           <a
-              href="https://www.google.com/maps/place/?q=place_id:ChIJrciT7fL7DDkRR7OJLNBkHh0"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-3 text-xs tracking-wide transition-all duration-300 hover:translate-x-1 hover:underline"
-              style={{ color: 'var(--gold)' }}
+            href="https://www.google.com/maps/search/?api=1&query=28.6885715,77.3404356&query_place_id=ChIJrciT7fL7DDkRR7OJLNBkHh0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 mt-3 text-xs tracking-wide transition-all duration-300 hover:translate-x-1 hover:underline"
+            style={{ color: 'var(--gold)' }}
           >
-              📍 Open in Google Maps →
+            📍 Open in Google Maps →
           </a>
         </div>
 
@@ -122,51 +221,143 @@ export default function ContactPage() {
               </p>
               <button
                 className="btn-outline mt-8"
-                onClick={() => { setSubmitted(false); setForm({ name: '', phone: '', email: '', service: '', budget: '', message: '' }); }}
+                onClick={() => { 
+                  setSubmitted(false); 
+                  setForm({ name: '', phone: '', email: '', service: '', budget: '', message: '' }); 
+                  setValidationErrors({});
+                }}
               >
                 Send Another
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
-              {/* On mobile, stack name/phone vertically */}
+              {/* Name and Phone fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
                 <div>
-                  <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>Full Name *</label>
-                  <input name="name" value={form.name} onChange={handleChange} required placeholder="Your Name" className="form-input" />
+                  <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
+                    Full Name *
+                  </label>
+                  <input 
+                    name="name" 
+                    value={form.name} 
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required 
+                    placeholder="Your Name" 
+                    className="form-input"
+                    style={validationErrors.name ? { borderColor: '#e05c5c' } : {}}
+                  />
+                  {validationErrors.name && (
+                    <p className="text-xs mt-1" style={{ color: '#e05c5c' }}>
+                      {validationErrors.name}
+                    </p>
+                  )}
                 </div>
-                <div>
-                  <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>Phone *</label>
-                  <input name="phone" value={form.phone} onChange={handleChange} required placeholder="+91 98XXXXXXX" type="tel" className="form-input" />
+                 <div>
+                  <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
+                    Phone Number *
+                  </label>
+                  <div
+                    className="flex items-stretch"
+                    style={{
+                      borderBottom: `1px solid ${validationErrors.phone ? '#e05c5c' : 'var(--border-color)'}`,
+                    }}
+                  >
+                    <div
+                      className="flex items-center gap-1.5 pr-3 mr-3"
+                      style={{ borderRight: '1px solid var(--border-subtle)', color: 'var(--text-secondary)', fontSize: '14px' }}
+                    >
+                      <span style={{ fontSize: '18px', lineHeight: 1 }}>🇮🇳</span>
+                      <span>+91</span>
+                      <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>▼</span>
+                    </div>
+                    <input
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      required
+                      placeholder="9876543210"
+                      type="tel"
+                      maxLength={10}
+                      className="flex-1 bg-transparent border-none outline-none py-2.5 placeholder:opacity-30"
+                      style={{ color: 'var(--text-primary)', fontSize: '14px' }}
+                    />
+                  </div>
+                  {validationErrors.phone && (
+                    <p style={{ color: '#e05c5c', fontSize: '12px', marginTop: '6px' }}>Phone number is required</p>
+                  )}
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>Email Address</label>
-                <input name="email" value={form.email} onChange={handleChange} placeholder="you@email.com" type="email" className="form-input" />
+                <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
+                  Email Address
+                </label>
+                <input 
+                  name="email" 
+                  value={form.email} 
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="you@email.com" 
+                  type="email" 
+                  className="form-input"
+                  style={validationErrors.email ? { borderColor: '#e05c5c' } : {}}
+                />
+                {validationErrors.email && (
+                  <p className="text-xs mt-1" style={{ color: '#e05c5c' }}>
+                    {validationErrors.email}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
                 <div>
-                  <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>Service Required *</label>
-                  <select name="service" value={form.service} onChange={handleChange} required className="form-input cursor-pointer" style={{ background: 'var(--bg-primary)' }}>
+                  <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
+                    Service Required *
+                  </label>
+                  <select 
+                    name="service" 
+                    value={form.service} 
+                    onChange={handleChange} 
+                    required 
+                    className="form-input cursor-pointer" 
+                    style={{ background: 'var(--bg-primary)' }}
+                  >
                     <option value="">Select...</option>
-                    {services.map((s) => <option key={s} value={s} style={{ background: 'var(--bg-primary)' }}>{s}</option>)}
+                    {services.map((s) => (
+                      <option key={s} value={s} style={{ background: 'var(--bg-primary)' }}>
+                        {s}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>Budget Range</label>
-                  <select name="budget" value={form.budget} onChange={handleChange} className="form-input cursor-pointer" style={{ background: 'var(--bg-primary)' }}>
+                  <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
+                    Budget Range
+                  </label>
+                  <select 
+                    name="budget" 
+                    value={form.budget} 
+                    onChange={handleChange} 
+                    className="form-input cursor-pointer" 
+                    style={{ background: 'var(--bg-primary)' }}
+                  >
                     <option value="">Select...</option>
                     {['Under ₹1L','₹1L – ₹3L','₹3L – ₹5L', '₹5L – ₹10L', '₹10L – ₹20L', '₹20L – ₹50L', '₹50L+'].map((b) => (
-                      <option key={b} value={b} style={{ background: 'var(--bg-primary)' }}>{b}</option>
+                      <option key={b} value={b} style={{ background: 'var(--bg-primary)' }}>
+                        {b}
+                      </option>
                     ))}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>Tell Us About Your Project</label>
+                <label className="block text-xs tracking-widest uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
+                  Tell Us About Your Project
+                </label>
                 <textarea
                   name="message"
                   value={form.message}
@@ -177,15 +368,25 @@ export default function ContactPage() {
                 />
               </div>
 
-              {error && <p className="text-sm text-center" style={{ color: '#e05c5c' }}>{error}</p>}
+              {error && (
+                <p className="text-sm text-center" style={{ color: '#e05c5c' }}>
+                  {error}
+                </p>
+              )}
 
-              <button type="submit" disabled={loading} className="btn-primary w-full justify-center">
+              <button 
+                type="submit" 
+                disabled={loading} 
+                className="btn-primary w-full justify-center"
+              >
                 {loading ? 'Sending…' : (<><Send size={13} /> Send Enquiry</>)}
               </button>
 
               <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
                 Or call us directly:{' '}
-                <a href="tel:+918796956034" style={{ color: 'var(--gold)' }}>+91 87969 56034</a>
+                <a href="tel:+918796956034" style={{ color: 'var(--gold)' }}>
+                  +91 87969 56034
+                </a>
               </p>
             </form>
           )}
