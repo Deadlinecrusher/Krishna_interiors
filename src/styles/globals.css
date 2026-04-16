@@ -22,7 +22,17 @@
   --nav-bg: rgba(250,248,244,0.95);
   --shadow: 0 4px 30px rgba(26,39,68,0.08);
 }
+/* ── EDGE TO EDGE FIX ── */
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
 
+/* Remove any accidental max-width containers on sections */
+section {
+  width: 100%;
+}
 .dark {
   --bg-primary: #0E0D0B;
   --bg-secondary: #1A1814;
@@ -33,6 +43,9 @@
   --border-color: rgba(201,169,110,0.15);
   --nav-bg: rgba(14,13,11,0.95);
   --shadow: 0 4px 30px rgba(0,0,0,0.4);
+  /* Footer logo circle — white background in dark mode (mirrors navbar logo) */
+  --footer-logo-bg: #ffffff;
+  --footer-logo-border: rgba(255,255,255,0.4);
 }
 
 /* ── BASE ── */

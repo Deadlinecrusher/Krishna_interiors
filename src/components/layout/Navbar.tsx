@@ -15,38 +15,20 @@ const links = [
 
 function KrishnaLogo({ theme }: { theme: string }) {
   const isDark = theme === 'dark';
-
   return (
     <div
-      className="
-        relative w-16 h-16 flex-shrink-0
-        rounded-full
-        flex items-center justify-center
-        transition-all duration-300
-        group-hover:scale-110 group-hover:shadow-lg
-      "
+      className="relative flex-shrink-0 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
       style={{
-        background: isDark
-          ? '#ffffff' // solid white in dark mode
-          : 'rgba(201,169,110,0.15)', // soft gold in light mode
-        border: isDark
-          ? '1.5px solid rgba(255,255,255,0.4)'
-          : '1.5px solid rgba(201,169,110,0.4)',
-        boxShadow: isDark
-          ? '0 4px 20px rgba(0,0,0,0.6)'
-          : '0 4px 20px rgba(201,169,110,0.25)',
+        width: '44px', height: '44px',
+        background: isDark ? '#ffffff' : 'rgba(201,169,110,0.15)',
+        border: isDark ? '1.5px solid rgba(255,255,255,0.4)' : '1.5px solid rgba(201,169,110,0.4)',
       }}
     >
-      <img
-        src="/logo.png"
-        alt="Krishna Interiors"
-        
-        className="
-          w-14 h-14 object-contain
-          transition-transform duration-300
-          group-hover:scale-110
-        "
-      />
+      <img src="/logo.png" alt="Krishna Interiors" 
+      style={{ 
+        width: '38px',
+        height: '38px', 
+        objectFit: 'contain' }} />
     </div>
   );
 }
@@ -63,30 +45,73 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+      {/* ── FAB hover styles — inline so Tailwind purge never strips them ── */}
+      <style>{`
+        .fab-btn {
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .fab-btn:hover {
+          transform: scale(1.13);
+          box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+        }
+        .fab-tooltip {
+          position: absolute;
+          right: 54px;
+          white-space: nowrap;
+          font-size: 11px;
+          font-weight: 500;
+          padding: 5px 12px;
+          border-radius: 999px;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.22s ease, transform 0.22s ease;
+          transform: translateX(8px);
+        }
+        .fab-wrap:hover .fab-tooltip {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        @media (max-width: 768px) {
+          .fab-tooltip { display: none !important; }
+        }
+      `}</style>
+
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          background: scrolled ? 'var(--nav-bg)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(16px)' : 'none',
+          background: scrolled || menuOpen ? 'var(--nav-bg)' : 'transparent',
+          backdropFilter: scrolled || menuOpen ? 'blur(16px)' : 'none',
           borderBottom: scrolled ? '1px solid var(--border-color)' : 'none',
-        }}>
-        <div className="flex items-center justify-between px-8 md:px-16 py-3">
-          <Link href="/" className="flex items-center gap-3 group">
+        }}
+      >
+        {/* ── MAIN BAR ── */}
+        <div className="flex items-center justify-between px-4 md:px-16 py-3">
+
+          {/* LEFT — Logo + text */}
+          <Link href="/" className="flex items-center gap-2.5 group" onClick={() => setMenuOpen(false)}>
             <KrishnaLogo theme={theme} />
-            <div className="hidden md:block">
-              <p className="font-serif text-xl font-light leading-tight italic" style={{ color: 'var(--gold)' }}>
+            <div>
+              <p className="font-serif text-base md:text-xl font-light leading-tight italic" style={{ color: 'var(--gold)' }}>
                 Krishna
               </p>
-              <p className="text-[0.52rem] tracking-[0.38em] uppercase mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              <p className="text-[0.45rem] md:text-[0.52rem] tracking-[0.3em] md:tracking-[0.38em] uppercase" style={{ color: 'var(--text-muted)' }}>
                 Construction Company
               </p>
+              
               <p className="text-[0.42rem] tracking-[0.2em] uppercase mt-0.5" style={{ color: 'var(--gold)', opacity: 0.7 }}>
                 Interior · Renovation · Turnkey
               </p>
             </div>
           </Link>
 
+          {/* CENTER — Desktop nav links */}
           <ul className="hidden md:flex items-center gap-8 list-none">
             {links.map((l) => (
               <li key={l.href}>
@@ -95,46 +120,85 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div className="flex items-center gap-4">
-            <button onClick={toggleTheme}
-              className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110"
+          {/* RIGHT — Actions */}
+          <div className="flex items-center gap-2 md:gap-4">
+            <button
+              onClick={toggleTheme}
+              className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full transition-all duration-300"
               style={{ border: '1px solid var(--border-color)', color: 'var(--text-muted)' }}
-              aria-label="Toggle theme">
-              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
             </button>
-            <Link href="/contact" className="btn-primary hidden md:inline-flex">Free Consultation</Link>
-            <button className="md:hidden" style={{ color: 'var(--text-primary)' }} onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+
+            <Link href="/contact" className="btn-primary hidden md:inline-flex">
+              Free Consultation
+            </Link>
+
+            <button
+              className="md:hidden w-8 h-8 flex items-center justify-center"
+              style={{ color: 'var(--text-primary)' }}
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
 
+        {/* ── MOBILE MENU ── */}
         {menuOpen && (
-          <div className="md:hidden px-6 pb-6 pt-2 flex flex-col gap-4"
-            style={{ background: 'var(--nav-bg)', borderTop: '1px solid var(--border-color)' }}>
-            {links.map((l) => (
-              <Link key={l.href} href={l.href}
-                className={`nav-link text-sm py-2 ${pathname === l.href ? 'active' : ''}`}
-                onClick={() => setMenuOpen(false)}>{l.label}</Link>
-            ))}
-            <Link href="/contact" className="btn-primary mt-2 text-center justify-center" onClick={() => setMenuOpen(false)}>
-              Free Consultation
-            </Link>
+          <div
+            className="md:hidden"
+            style={{ background: 'var(--nav-bg)', borderTop: '1px solid var(--border-color)' }}
+          >
+            <div className="px-5 py-6 flex flex-col gap-1">
+              {links.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3.5 text-sm font-medium border-b flex items-center justify-between"
+                  style={{
+                    color: pathname === l.href ? 'var(--gold)' : 'var(--text-secondary)',
+                    borderColor: 'var(--border-color)',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  {l.label}
+                  {pathname === l.href && (
+                    <span style={{ width: '20px', height: '1px', background: 'var(--gold)', display: 'block' }} />
+                  )}
+                </Link>
+              ))}
+              <Link
+                href="/contact"
+                className="btn-primary mt-5 text-center justify-center"
+                onClick={() => setMenuOpen(false)}
+              >
+                Free Consultation
+              </Link>
+            </div>
           </div>
         )}
       </nav>
 
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-        <div className="relative group flex items-center justify-end">
-          <span className="absolute right-16 whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 pointer-events-none"
-            style={{ background: '#0E0D0B', color: '#fff', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
-            Chat with AI
-          </span>
-          <button onClick={() => { const b = document.getElementById('ki-bot-box'); if(b) b.style.display = b.style.display === 'none' ? 'flex' : 'none'; }}
-            className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
-            style={{ background: 'linear-gradient(135deg, #C9A96E, #A07840)', boxShadow: '0 4px 20px rgba(201,169,110,0.5)' }}
-            aria-label="AI Chat">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      {/* ── FLOATING BUTTONS ── */}
+      <div className="fixed z-50 flex flex-col gap-2.5" style={{ bottom: '1.25rem', right: '1rem' }}>
+
+        {/* AI Chat */}
+        <div className="fab-wrap relative flex items-center justify-end">
+          <span className="fab-tooltip" style={{ background: '#0E0D0B', color: '#fff' }}>Chat with AI</span>
+          <button
+            className="fab-btn rounded-full flex items-center justify-center shadow-lg"
+            style={{ width: '46px', height: '46px', background: 'linear-gradient(135deg, #C9A96E, #A07840)' }}
+            onClick={() => {
+              const b = document.getElementById('ki-bot-box');
+              if (b) b.style.display = b.style.display === 'none' ? 'flex' : 'none';
+            }}
+            aria-label="AI Chat"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.06L2 22l4.94-1.37A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/>
               <circle cx="8.5" cy="12" r="1" fill="white" stroke="none"/>
               <circle cx="12" cy="12" r="1" fill="white" stroke="none"/>
@@ -143,31 +207,33 @@ export default function Navbar() {
           </button>
         </div>
 
-        <div className="relative group flex items-center justify-end">
-          <span className="absolute right-16 whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 pointer-events-none"
-            style={{ background: '#E1306C', color: '#fff', boxShadow: '0 4px 12px rgba(225,48,108,0.4)' }}>
-            Follow us
-          </span>
-          <a href="https://www.instagram.com/_krishna_interiors_" target="_blank" rel="noopener noreferrer"
-            className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
-            style={{ background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)', boxShadow: '0 4px 20px rgba(225,48,108,0.45)' }}
-            aria-label="Instagram">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+        {/* Instagram */}
+        <div className="fab-wrap relative flex items-center justify-end">
+          <span className="fab-tooltip" style={{ background: '#E1306C', color: '#fff' }}>Follow us</span>
+          <a
+            href="https://www.instagram.com/_krishna_interiors_"
+            target="_blank" rel="noopener noreferrer"
+            className="fab-btn rounded-full flex items-center justify-center shadow-lg"
+            style={{ width: '46px', height: '46px', background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)' }}
+            aria-label="Instagram"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
               <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
             </svg>
           </a>
         </div>
 
-        <div className="relative group flex items-center justify-end">
-          <span className="absolute right-16 whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 pointer-events-none"
-            style={{ background: '#25D366', color: '#fff', boxShadow: '0 4px 12px rgba(37,211,102,0.4)' }}>
-            Chat on WhatsApp
-          </span>
-          <a href="https://wa.me/918796956034" target="_blank" rel="noopener noreferrer"
-            className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
-            style={{ background: '#25D366', boxShadow: '0 4px 20px rgba(37,211,102,0.45)' }}
-            aria-label="WhatsApp">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+        {/* WhatsApp */}
+        <div className="fab-wrap relative flex items-center justify-end">
+          <span className="fab-tooltip" style={{ background: '#25D366', color: '#fff' }}>WhatsApp</span>
+          <a
+            href="https://wa.me/918796956034"
+            target="_blank" rel="noopener noreferrer"
+            className="fab-btn rounded-full flex items-center justify-center shadow-lg"
+            style={{ width: '46px', height: '46px', background: '#25D366' }}
+            aria-label="WhatsApp"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
               <path d="M12 0C5.373 0 0 5.373 0 12c0 2.121.554 4.11 1.523 5.837L.057 23.882l6.19-1.624A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.369l-.358-.214-3.724.977.994-3.63-.234-.372A9.818 9.818 0 1112 21.818z"/>
             </svg>
@@ -175,12 +241,13 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div id="ki-bot-box" className="fixed bottom-28 right-6 z-50 w-80 rounded-2xl overflow-hidden shadow-2xl"
-        style={{ display: 'none', flexDirection: 'column', background: 'var(--bg-card, #fff)', border: '1px solid var(--border-color)' }}>
+      {/* ── AI CHAT BOX ── */}
+      <div id="ki-bot-box" className="fixed z-50 rounded-2xl overflow-hidden shadow-2xl"
+        style={{ display: 'none', flexDirection: 'column', bottom: '5.5rem', right: '1rem', width: '300px', background: 'var(--bg-card, #fff)', border: '1px solid var(--border-color)' }}>
         <div className="flex items-center justify-between px-4 py-3" style={{ background: 'linear-gradient(135deg, #C9A96E, #A07840)' }}>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.06L2 22l4.94-1.37A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/>
                 <circle cx="8.5" cy="12" r="1" fill="white" stroke="none"/>
                 <circle cx="12" cy="12" r="1" fill="white" stroke="none"/>
@@ -192,10 +259,12 @@ export default function Navbar() {
               <p className="text-white/70 text-[10px]">Online · Replies instantly</p>
             </div>
           </div>
-          <button onClick={() => { const b = document.getElementById('ki-bot-box'); if(b) b.style.display='none'; }}
-            className="text-white/80 hover:text-white transition-colors text-lg leading-none">✕</button>
+          <button
+            onClick={() => { const b = document.getElementById('ki-bot-box'); if (b) b.style.display = 'none'; }}
+            className="text-white/80 hover:text-white text-lg leading-none"
+          >✕</button>
         </div>
-        <div id="ki-bot-msgs" className="p-4 space-y-3 overflow-y-auto" style={{ maxHeight: '260px', background: 'var(--bg-secondary, #F0EBE1)' }}>
+        <div id="ki-bot-msgs" className="p-4 space-y-3 overflow-y-auto" style={{ maxHeight: '240px', background: 'var(--bg-secondary, #F0EBE1)' }}>
           <div className="flex gap-2">
             <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold" style={{ background: 'linear-gradient(135deg, #C9A96E, #A07840)' }}>K</div>
             <div className="text-xs leading-relaxed px-3 py-2 rounded-2xl rounded-tl-none max-w-[85%]" style={{ background: 'var(--bg-card, #fff)', color: 'var(--text-primary)', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
@@ -210,7 +279,7 @@ export default function Navbar() {
                   if (!msgs) return;
                   const responses: Record<string, string> = {
                     'Get a Quote': 'Great! Please call us at +91 87969 56034 or fill our contact form. We offer free on-site consultations! 🏠',
-                    'View Services': 'We offer Interior Design, Turnkey Solutions, Renovation, Modular Kitchens, 3D Visualization & Flooring. Visit our Services page to learn more!',
+                    'View Services': 'We offer Interior Design, Turnkey Solutions, Renovation, Modular Kitchens, 3D Visualization & Flooring. Visit our Services page!',
                     'Our Portfolio': 'We have completed 150+ projects across Delhi NCR. Check out our Portfolio page to see our work! ✨',
                     'Contact Us': 'You can reach us at +91 87969 56034 or WhatsApp us. Our studio is at Plot 836, Shalimar Garden Ext-1, Ghaziabad. 📍',
                   };
@@ -227,7 +296,7 @@ export default function Navbar() {
                   }, 600);
                   msgs.scrollTop = msgs.scrollHeight;
                 }}
-                className="text-[10px] px-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105"
+                className="text-[10px] px-3 py-1.5 rounded-full transition-all duration-200"
                 style={{ border: '1px solid var(--gold,#C9A96E)', color: 'var(--gold-dark,#A07840)', background: 'transparent' }}>
                 {q}
               </button>
@@ -257,9 +326,12 @@ export default function Navbar() {
                 }, 700);
                 msgs.scrollTop = msgs.scrollHeight;
               }
-            }}/>
+            }} />
           <button style={{ color: 'var(--gold,#C9A96E)' }}
-            onClick={() => { const input = document.getElementById('ki-bot-input') as HTMLInputElement; if(input) input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); }}>
+            onClick={() => {
+              const input = document.getElementById('ki-bot-input') as HTMLInputElement;
+              if (input) input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
           </button>
         </div>
