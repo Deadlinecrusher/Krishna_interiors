@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="18" fill="#1A2744"/>
+  <rect width="100" height="100" rx="18" fill="none" stroke="#C9A96E" stroke-width="3" opacity="0.6"/>
+  <!-- K letterform -->
+  <line x1="28" y1="22" x2="28" y2="78" stroke="#C9A96E" stroke-width="8" stroke-linecap="round"/>
+  <line x1="28" y1="50" x2="66" y2="22" stroke="#C9A96E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="28" y1="50" x2="70" y2="78" stroke="#C9A96E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Gold dot accent -->
+  <circle cx="72" cy="50" r="4" fill="#C9A96E" opacity="0.5"/>
+</svg>
